@@ -3,8 +3,10 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <map>
 using namespace std;
 
+map<string, double> menu;
 const string ownerPassword = "1234"; // รหัสผ่านของเจ้าของร้าน
 
 
@@ -32,6 +34,53 @@ void customermode() {
         }
     }
 }
+void addmenuitem() {
+    string itemName;
+    double itemPrice;
+
+    cout << "\nEnter new menu item name: ";
+    cin.ignore(); 
+    getline(cin, itemName);
+
+    cout << "Enter price for " << itemName << ": ";
+    cin >> itemPrice;
+
+    menu[itemName] = itemPrice;
+    cout << itemName << " has been added to the menu with a price of $" << itemPrice << "\n";
+}
+
+void removemenuitem() {
+    string itemName;
+    cout << "\nEnter the name of the menu item to remove: ";
+    cin.ignore();
+    getline(cin, itemName);
+
+    if (menu.erase(itemName)) { 
+        cout << itemName << " has been removed from the menu.\n";
+    } else {
+        cout << "Item not found!\n";
+    }
+}
+
+void changeprice() {
+    string itemName;
+    double newPrice;
+
+    cout << "\nEnter the name of the menu item to change the price: ";
+    cin.ignore();
+    getline(cin, itemName);
+
+    if (menu.find(itemName) != menu.end()) { 
+        cout << "Enter new price for " << itemName << ": ";
+        cin >> newPrice;
+
+        menu[itemName] = newPrice; 
+        cout << fixed << setprecision(2);
+        cout << "Price for " << itemName << " has been updated to $" << newPrice << "\n";
+    } else {
+        cout << "Item not found!\n";
+    }
+}
 
 void ownermode() {
     string password;
@@ -55,11 +104,11 @@ void ownermode() {
         cin >> choice;
 
         switch (choice) {
-            case '1': "addmenuitem()"; // เพิ่มเมนู
+            case '1': addmenuitem(); // เพิ่มเมนู
             break;
-            case '2': "removemenuitem()"; // ลบเมนูออก
+            case '2': removemenuitem(); // ลบเมนูออก
             break;
-            case '3': "changeprice()";  // เปลี่ยนราคาอาหาร
+            case '3': changeprice();  // เปลี่ยนราคาอาหาร
             break;
             case '4': return;
             default: cout << "Invalid input! Please try again.\n";
