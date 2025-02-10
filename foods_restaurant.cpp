@@ -9,6 +9,18 @@ using namespace std;
 map<string, double> menu;
 const string ownerPassword = "1234"; // รหัสผ่านของเจ้าของร้าน
 
+void menudisplay() {
+    if (menu.empty()) {
+        cout << "\nMenu is empty!\n";
+    } else {
+        cout << "\n------ Menu ------\n";
+        int index = 1;
+        for (const auto &item : menu) {
+            cout << "[" << index << "] " << item.first << " - $" << fixed << setprecision(2) << item.second << "\n";
+            index++;
+        }
+    }
+}
 
 void customermode() {
     while (true) {
@@ -23,7 +35,7 @@ void customermode() {
         cin >> choice;
 
         switch (choice) {
-            case '1': "menu()"; // ฟังก์ชั่นแสดงหน้าเมนู
+            case '1': menudisplay(); // ฟังก์ชั่นแสดงหน้าเมนู
             break;
             case '2': "orderfood()"; // ฟังก์ชั่นสั่งอาหาร
             break;
