@@ -4,10 +4,21 @@
 #include <sstream>
 #include <iomanip>
 #include <map>
+#include <limits>
 using namespace std;
 
 map<string, double> menu;
+map<int, string> itemNumbers;
 const string ownerPassword = "1234"; // รหัสผ่านของเจ้าของร้าน
+
+void recheckItemNumbers() {
+    itemNumbers.clear(); 
+    int number = 1;
+    for (const auto& item : menu) {
+        itemNumbers[number] = item.first;
+        number++;
+    }
+}
 
 void menudisplay() {
     if (menu.empty()) {
@@ -19,6 +30,7 @@ void menudisplay() {
             cout << "[" << index << "] " << item.first << " - $" << fixed << setprecision(2) << item.second << "\n";
             index++;
         }
+        recheckItemNumbers();
     }
 }
 
@@ -62,11 +74,29 @@ void addmenuitem() {
 }
 
 void removemenuitem() {
+    int itemNumber;
     string itemName;
-    cout << "\nEnter the name of the menu item to remove: ";
-    cin.ignore();
-    getline(cin, itemName);
+    menudisplay();
+    cout << "\nEnter the name OR number of the menu item to remove: ";
+    string input;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, input);
+    recheckItemNumbers();
 
+    try {
+        itemNumber = stoi(input); 
+          if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
+              itemName = itemNumbers[itemNumber];
+          } else {
+              cout << "Invalid item number.\n";
+              return;
+          }
+      } catch (const std::invalid_argument& e) {
+          itemName = input; 
+      } catch (const std::out_of_range& e) {
+          cout << "Invalid item number (out of range).\n";
+          return;
+      }
     if (menu.erase(itemName)) { 
         cout << itemName << " has been removed from the menu.\n";
     } else {
@@ -75,17 +105,37 @@ void removemenuitem() {
 }
 
 void changeprice() {
+    int itemNumber;
     string itemName;
     double newPrice;
+    menudisplay();
+    cout << "\nEnter the name OR number of the menu item to change the price: ";
 
-    cout << "\nEnter the name of the menu item to change the price: ";
-    cin.ignore();
-    getline(cin, itemName);
+    string input;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, input);
+
+    recheckItemNumbers();
+
+    try {
+        itemNumber = stoi(input); 
+          if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
+              itemName = itemNumbers[itemNumber];
+          } else {
+              cout << "Invalid item number.\n";
+              return;
+          }
+      } catch (const std::invalid_argument& e) {
+          itemName = input; 
+      } catch (const std::out_of_range& e) {
+          cout << "Invalid item number (out of range).\n";
+          return;
+      }
 
     if (menu.find(itemName) != menu.end()) { 
         cout << "Enter new price for " << itemName << ": ";
-        cin >> newPrice;
-
+        cin >> newPrice;         
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         menu[itemName] = newPrice; 
         cout << fixed << setprecision(2);
         cout << "Price for " << itemName << " has been updated to $" << newPrice << "\n";
