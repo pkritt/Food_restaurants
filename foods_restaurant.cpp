@@ -63,6 +63,47 @@ void recommendedmenu() {
     }
 }
 
+void orderfood() {
+    if (menu.empty()) {
+        cout << "\nMenu is empty! Cannot place an order.\n";
+        return;
+    }
+
+    vector<pair<string, int>> order;
+    string itemName;
+    int quantity;
+    char more;
+
+    do {
+        cout << "\nEnter the name of the menu item to order: ";
+        cin.ignore();
+        getline(cin, itemName);
+
+        if (menu.find(itemName) != menu.end()) {
+            cout << "Enter quantity: ";
+            cin >> quantity;
+
+            order.push_back({itemName, quantity});
+            cout << "Added " << quantity << "x " << itemName << " to your order.\n";
+        } else {
+            cout << "Item not found in the menu!\n";
+        }
+
+        cout << "Do you want to order more? (y/n): ";
+        cin >> more;
+    } while (more == 'y' || more == 'Y');
+
+    cout << "\n------ Your Order ------\n";
+    double total = 0;
+    for (const auto &item : order) {
+        double price = menu[item.first] * item.second;
+        cout << item.second << "x " << item.first << " - $" << fixed << setprecision(2) << price << "\n";
+        total += price;
+    }
+    cout << "------------------------\n";
+    cout << "Total: $" << fixed << setprecision(2) << total << "\n";
+}
+
 void customermode() {
     while (true) {
         char choice;
