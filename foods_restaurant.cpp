@@ -34,30 +34,65 @@ void menudisplay() {
     }
 }
 
+void searchmenu() {
+    string itemName;
+    cout << "\nEnter the name of the menu item to search: ";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+    getline(cin, itemName);
+
+    auto it = menu.find(itemName);
+    if (it != menu.end()) {
+        cout << "\nItem found: " << it->first << " - $" << fixed << setprecision(2) << it->second << "\n";
+    } else {
+        cout << "\nItem not found in the menu!\n";
+    }
+}
+
+
+void recommendedmenu() {
+    if (menu.empty()) {
+        cout << "\nNo menu items available for recommendation.\n";
+        return;
+    }
+
+    cout << "\n---- Recommended Menu ----\n";
+    int count = 0;
+    for (const auto &item : menu) {
+        cout << "- " << item.first << " - $" << fixed << setprecision(2) << item.second << "\n";
+        if (++count >= 3) break; 
+    }
+}
+
 void customermode() {
     while (true) {
         char choice;
         cout << "\n-----   Customer Menu  -----";
         cout << "\n--- Please Make a Choice ---\n";
         cout << "[1] View Menu\n";
-        cout << "[2] Order Food\n";
+        cout << "[2] Order Food\n"; 
         cout << "[3] Search Menu\n";
-        cout << "[4] Back to Main Menu\n";
+        cout << "[4] Recommended Menu\n";
+        cout << "[5] Back to Main Menu\n";
         cout << "Enter choice: ";
         cin >> choice;
 
         switch (choice) {
-            case '1': menudisplay(); // ฟังก์ชั่นแสดงหน้าเมนู
+            case '1': menudisplay();
             break;
-            case '2': "orderfood()"; // ฟังก์ชั่นสั่งอาหาร
+            case '2': orderfood();
             break;
-            case '3': "searchmenu()"; // ฟังก์ชั่นค้นหาเมนู
+            case '3': searchmenu();
             break;
-            case '4': return;
+            case '4': recommendedmenu();
+            break;
+            case '5': return;
             default: cout << "Invalid choice! Please try again.\n";
         }
     }
 }
+
+
+
 void addmenuitem() {
     string itemName;
     double itemPrice;
