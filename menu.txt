@@ -1,6 +1,6 @@
-Pad Thai,40.00
-Fried Rice with Shrimp,50.00
-Spring Rolls,25.00
-Papaya Salad,45.00
-Thai Iced Tea,25.00
-Coconut Juice,20.00
+Coconut Juice,20
+Fried Rice with Shimp,50
+Pad Thai,40
+Papaya Salad,45
+Sping Rolls,25
+Thai Iced Tea,25

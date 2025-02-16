@@ -11,6 +11,41 @@ map<string, double> menu;
 map<int, string> itemNumbers;
 const string ownerPassword = "1234"; // รหัสผ่านของเจ้าของร้าน
 
+void savemenu() {
+    ofstream file("menu.txt");  
+    if (!file) {
+        cout << "Error saving menu!\n";
+        return;
+    }
+
+    for (const auto& item : menu) {
+        file << item.first << "," << item.second << "\n";
+    }
+
+    file.close();
+}
+
+void loadmenu() {
+    ifstream file("menu.txt");
+    if (!file) {
+        cout << "No existing menu file found. Starting fresh.\n";
+        return;
+    }
+
+    menu.clear();
+    string line, name;
+    double price;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        if (getline(ss, name, ',') && (ss >> price)) {
+            menu[name] = price;
+        }
+    }
+
+    file.close();
+}
+
 void recheckItemNumbers() {
     itemNumbers.clear(); 
     int number = 1;
@@ -146,6 +181,7 @@ void addmenuitem() {
     cin >> itemPrice;
 
     menu[itemName] = itemPrice;
+    savemenu();
     cout << itemName << " has been added to the menu with a price of $" << itemPrice << "\n";
 }
 
@@ -161,19 +197,20 @@ void removemenuitem() {
 
     try {
         itemNumber = stoi(input); 
-          if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
-              itemName = itemNumbers[itemNumber];
-          } else {
-              cout << "Invalid item number.\n";
-              return;
-          }
-      } catch (const std::invalid_argument& e) {
-          itemName = input; 
-      } catch (const std::out_of_range& e) {
-          cout << "Invalid item number (out of range).\n";
-          return;
-      }
+        if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
+            itemName = itemNumbers[itemNumber];
+        } else {
+            cout << "Invalid item number.\n";
+            return;
+        }
+    } catch (const std::invalid_argument& e) {
+        itemName = input; 
+    } catch (const std::out_of_range& e) {
+        cout << "Invalid item number (out of range).\n";
+        return;
+    }
     if (menu.erase(itemName)) { 
+        savemenu();
         cout << itemName << " has been removed from the menu.\n";
     } else {
         cout << "Item not found!\n";
@@ -195,24 +232,25 @@ void changeprice() {
 
     try {
         itemNumber = stoi(input); 
-          if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
-              itemName = itemNumbers[itemNumber];
-          } else {
-              cout << "Invalid item number.\n";
-              return;
-          }
-      } catch (const std::invalid_argument& e) {
-          itemName = input; 
-      } catch (const std::out_of_range& e) {
-          cout << "Invalid item number (out of range).\n";
-          return;
-      }
+        if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
+            itemName = itemNumbers[itemNumber];
+        } else {
+            cout << "Invalid item number.\n";
+            return;
+        }
+    } catch (const std::invalid_argument& e) {
+        itemName = input; 
+    } catch (const std::out_of_range& e) {
+        cout << "Invalid item number (out of range).\n";
+        return;
+    }
 
     if (menu.find(itemName) != menu.end()) { 
         cout << "Enter new price for " << itemName << ": ";
         cin >> newPrice;         
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         menu[itemName] = newPrice; 
+        savemenu();
         cout << fixed << setprecision(2);
         cout << "Price for " << itemName << " has been updated to $" << newPrice << "\n";
     } else {
