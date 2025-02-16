@@ -293,6 +293,7 @@ void ownermode() {
 }
 
 int main() {
+    loadmenu();
     while (true) {
         char mode;
         cout << "\n---- Restaurant System -----";
