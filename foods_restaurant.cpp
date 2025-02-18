@@ -105,16 +105,33 @@ void orderfood() {
     }
 
     vector<pair<string, int>> order;
-    string itemName;
     int quantity;
     char more;
-
+    int itemNumber;
+    string itemName;
     do {
-        cout << "\nEnter the name of the menu item to order: ";
-        cin.ignore();
-        getline(cin, itemName);
+        menudisplay();
+    cout << "\nEnter the name OR number of the menu item to order: ";
+    string input;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, input);
+    recheckItemNumbers();
 
-        if (menu.find(itemName) != menu.end()) {
+    try {
+        itemNumber = stoi(input); 
+        if (itemNumbers.find(itemNumber) != itemNumbers.end()) {
+            itemName = itemNumbers[itemNumber];
+        } else {
+            cout << "Invalid item number.\n";
+            return;
+        }
+    } catch (const std::invalid_argument& e) {
+        itemName = input; 
+    } catch (const std::out_of_range& e) {
+        cout << "Invalid item number (out of range).\n";
+        return;
+    }
+         if (menu.find(itemName) != menu.end()) {
             cout << "Enter quantity: ";
             cin >> quantity;
 
